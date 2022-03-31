@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" /> 
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--\<meta name="viewport" content="width=device-width, initial-scale=1"> -->
+<link rel="canonical" href="/">
+<meta property="og:url" content="/">
+<meta property="og:site_name" content="/">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon.png">
+<title>u-Bat</title>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/styles/default.min.css">
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<link rel="icon" type="image/jpeg" href="/favicon.png"/>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="/assets/css/main.css">
+<!--pudhina-fresh-jekyll-sun-chocolate-ruby-v-2021-02-22-->
+<div class="wrapper">
+<header class="header">
+<div class="navigation">
+<style>
+.headerx img {
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+.headerx h1 {
+  position: relative;
+  top: 8px;
+  left: 10px;
+}
+</style>
+<div class="headerx">
+  <img src="/assets/img/logo.png" alt="logo" width="90px" length="90px">
+ <h1>u-Bat</h1>
+</div>
+<ul class="menu">
+<li class="menu__entry"><a href="/" style = "color: #4d4d4d">About</a>
+<li class="menu__entry"><a href="/resources" style = "color:  #4d4d4d">Resources</a>
+<li class="menu__entry"><a href="/applications" style = "color:  #4d4d4d">Applications</a>
+<li class="menu__entry"><a href="/deployment" style = "color:  #4d4d4d">Deployment</a>
+<li class="menu__entry"><a href="/team" style = "color:  #4d4d4d">Team</a>
+</ul>
+</div>
+</header>
+<br>
+<style>
+.column {
+  float: left;
+  width: 50%;
+  padding: 10px
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+hp {
+float: right;    
+margin: 0 0 0 15px;
+}
+figcaption {
+  background-color: #4d4d4d;
+  color: white;
+  padding: 2px;
+  margin-bottom: 5px;
+  text-align: center;
+  width: 100%;
+  float: relative;
+}
+figure {
+  border: 1px #cccccc solid;
+  padding: 4px;
+  margin: auto;
+}
+</style>
+<h2 style="text-align: left; color: #4d4d4d; font-size:25px ">u-Bat: Ultra-low Power Acoustic Classifier for Edge Devices</h2>
+<p>u-Bat (earlier ULP-ACE) aims to design a deployable system at edge to detect and classify the audio signatures with ultra-low power, light accoutic classifier. We have used TI's CC1352 as a demonstration chip which has ARM Cortex M4F processor and supports TI-RTOS. The application consumes <a style="background-color: #FF9999 ">49KB of FLASH</a>, <a style="background-color: #FFFF99 "> 17KB of SRAM</a> and <a style="background-color: #99FF99">5.5mW of MEAN POWER</a> which is measured with Energy Trace (powered by TI) for Dingo detection on edge.</p>
+<h4 style="color: #4d4d4d; font-size:25px">In-filter Computing: Template SVM</h4>
+<hp>
+<img src="/assets/img/FD_BW_bold.png" width="650px" length="850px" />
+<figcaption>Fig 1. Functional diagram of Template SVM</figcaption>
+</hp>
+<p>The In-filter computing performs certain amount of pre-processing of audio to extract salient features which will be used to train and test the SVM model. The audio samples passes through the CAR block which are band pass filters, output of these CAR filers are the frequency components present in corresponding filter frequency band for every sample, This component pases thrugh IHC blocks and summed for Fs samples (1 second duration), this summed energy component will be normalized in the range of 0 to 1 and this computed template output vector of normalized block after processing for every 1 second duration will be passed next to train and test the model.
+  For different application, tunable parameters such as sampling frequency, low and high threshold of interested frquency band,   number of cascaded filters and selection of range of these cascaded filters (channels) to train the model will be adjusted according to interested frequency bands of targeted classes. We use one-against-all (OAA) approach for the training.
+  The dataset used for the training should be recorded through the microphone to generalize the effects of microphone channel in the training.</p>
+<h4 style="color: #4d4d4d; font-size:25px">System Implementation</h4>
+<p>The Template SVM algorithm is implemented on TI's CC1352 chip (<a href="https://www.ti.com/tool/LAUNCHXL-CC1352R1">LAUNCHXL-CC1352R1</a>) which has ARM Cortex M4F processor working at 48MHz. We have leveraged the TI-RTOS features in-order to have fine-control over the pooling of hardware resources, power and memory optimizations.</p>
+<p><a href="https://www.adafruit.com/product/3492">Adafruit PDM MEMS Microphone</a> is used to capture the audio signals and it is interfaced with PDM drivers (Thread 1) and programmed to work at 1MHz sampling rate, decimated to 8KHz to get the PCM samples of the respective audio, these PCM samples are fed into accoutics classifier running on a different thread (Thread 2) using TI-RTOS. Since we have a single ARM core, these two threads are switching between each other, to eloborate, microphone collects 32 samples at one go, the accoutics classifier processes these 32 samples and goes to IDLE state before next 32 samples arrive. This process goes on real-time and after 8k samples are processed, a binary decision is made.</p>
+<p><img src="/assets/img/fine_borders_hwCC13.png" width="800px" length="1200px;" class="center" /></p>
+<figcaption class="center">Fig 2. System Block Diagram</figcaption>
+<div class="row">
+ <div class="column">
+ <h4 style="color: #4d4d4d; font-size:25px">Current Work and Future Aspirations</h4>
+ <ol>
+ <li>Optimizations with respective memory and power to increase the sustainability.
+ <li> Fixed point and with the use of CMSIS-NN, till now we did with floating point precision.
+ <li>Automated framework for training, testing and inferencing on edge.
+ <li>Use sensor controller studio to create a wake-up system to avoid device to be on always and push power requirement further down and also, use ULP microphone sensor on the board
+ <li>Increase the reliability and robustness of the device. 
+ <li>A custom board with application specific hardware with communication stack, energy harvesting incorporated in it.
+ </ol>
+<h5 style="color: #4d4d4d; font-size:25px">Memory and Power:</h5>
+<img src="/assets/img/memory_power_improvedv1.PNG" />
+</div>
+<div class="column">
+<h4 style="color: #4d4d4d; font-size:25px">DEMO: Dingo Detection on Edge</h4>
+<video width="95%" height="350" controls="">
+  <source src="/assets/img/dingo.mp4" type="video/mp4" />
+</video>
+<br />
+<a><i>*The red LED indicates the sound of Dingo has been detected*</i></a>
+<h4 style="color: #4d4d4d; font-size:25px">References</h4>
+<ol>
+<li>H.R. Sabbella , A.R. Nair, V. Gumme, S.S. Yadav, S. Chakrabartty, C.S. Thakur, “An Always-On tinyML Acoustic Classifier for Ecological Applications.” <i> IEEE ISCAS 2022 </i>
+<li>Hemanth Reddy Sabbella ”Bird Hotspots: A tinyML acoustic classification system for ecologicalinsights.” <i> tinyML Asia Technical Forum, 2021. </i>
+<li>A.R. Nair, S. Chakrabartty, C.S. Thakur, “In-filter Computing For Designing Ultra-light Acoustic Pattern Recognizers“,  <i>IEEE IoT Journal.</i>
+</ol>
+</div>
+</div>
+<br>
+<br>
+</div>
